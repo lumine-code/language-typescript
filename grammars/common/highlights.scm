@@ -707,7 +707,7 @@
 ; Function variable reassignment:
 ; The "foo" in `foo = function () {`
 (assignment_expression
-  left: (identifier) @function
+  left: (identifier) @entity.name.function.definition._LANG_
   right: [(function_expression) (arrow_function)])
 
 ; Object key-value pair function:
@@ -919,7 +919,7 @@
 
 "=" @keyword.operator.assignment._LANG_
 
-["&" "|" "<<" ">>" ">>>" "~" "^"] @keyword.operator.bitwise.js
+["&" "|" "<<" ">>" ">>>" "~" "^"] @keyword.operator.bitwise._LANG_
 
 (non_null_expression "!" @keyword.operator.non-null._LANG_)
 (variable_declarator "!" @keyword.operator.non-null._LANG_)
