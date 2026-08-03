@@ -9,6 +9,10 @@ TypeScript language support.
 - **Snippets**: shortcuts for common TypeScript constructs.
 - **Indentation**: configurable indent rules for braces, brackets, parentheses, switch cases, and hanging operators.
 
+## Installation
+
+To install `language-typescript` search for _language-typescript_ in the Install pane of the Lumine settings or run `lumine --install lumine-code/language-typescript`.
+
 ## Services
 
 - **hyperlink.injection** (`^1.0.0`): consumed to highlight URLs inside TypeScript files as clickable links.
