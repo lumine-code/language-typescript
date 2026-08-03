@@ -1,6 +1,6 @@
 {
   "scopeName": "source.ts.regexp",
-  "type": "modern-tree-sitter",
+  "type": "tree-sitter",
   "parser": "tree-sitter-regex",
   "injectionRegex": "^(ts-regex)$",
   "treeSitter": {

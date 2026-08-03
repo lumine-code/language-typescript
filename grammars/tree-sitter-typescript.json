@@ -1,7 +1,7 @@
 {
   "name": "TypeScript",
   "scopeName": "source.ts",
-  "type": "modern-tree-sitter",
+  "type": "tree-sitter",
   "parser": "tree-sitter-typescript/typescript",
   "fileTypes": ["ts", "cts", "mts"],
   "injectionRegex": "^(typescript|TYPESCRIPT|ts|TS)$",
