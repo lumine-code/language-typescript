@@ -2,7 +2,7 @@ const path = require("path");
 
 describe("WASM Tree-sitter TypeScript grammar", () => {
   beforeEach(async () => {
-    await atom.packages.activatePackage("language-typescript");
+    await lumine.packages.activatePackage("language-typescript");
   });
 
   describe("regular grammar", () => {
