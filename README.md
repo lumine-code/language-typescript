@@ -11,12 +11,12 @@ TypeScript language support.
 
 ## Installation
 
-To install `language-typescript` search for _language-typescript_ in the Install pane of the Lumine settings or run `lumine --install lumine-code/language-typescript`.
+To install `language-typescript` search for it in the Install pane of the Lumine settings, or run the command `lumine --install lumine-code/language-typescript`.
 
 ## Services
 
-- **hyperlink.injection** (`^1.0.0`): consumed to highlight URLs inside TypeScript files as clickable links.
-- **todo.injection** (`^1.0.0`): consumed to highlight `TODO`-style markers inside comments.
+- `hyperlink.injection`: consumed to highlight URLs inside TypeScript files as clickable links.
+- `todo.injection`: consumed to highlight `TODO`-style markers inside comments.
 
 ## Contributing
 
