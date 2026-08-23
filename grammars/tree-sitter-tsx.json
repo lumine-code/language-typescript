@@ -10,7 +10,7 @@
   },
   "treeSitter": {
     "parserSource": "github:tree-sitter/tree-sitter-typescript/tsx#v0.23.2",
-    "wasmBuildTool": "tree-sitter-cli#v0.26.11",
+    "wasmBuildTool": "tree-sitter-cli#v0.26.13",
     "languageSegment": "ts.tsx",
     "grammar": "tree-sitter-tsx/tree-sitter-tsx.wasm",
     "highlightsQuery": ["tree-sitter-tsx/highlights.scm", "common/highlights.scm"],
