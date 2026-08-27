@@ -1,6 +1,6 @@
 {
   ".source.tsx": {
-    "language": {
+    "editor": {
       "commentStart": "// ",
       "commentDelimiters": {
         "line": "//",
@@ -12,7 +12,7 @@
     }
   },
   ".meta.tag.tsx, .meta.block.jsx.ts.tsx": {
-    "language": {
+    "editor": {
       "commentStart": "{/* ",
       "commentEnd": " */}",
       "commentDelimiters": {
@@ -23,7 +23,7 @@
     }
   },
   ".meta.tag.tsx .meta.block.ts.tsx": {
-    "language": {
+    "editor": {
       "commentStart": "// ",
       "commentDelimiters": {
         "line": "//",

@@ -1,6 +1,6 @@
 {
   ".source.ts": {
-    "language": {
+    "editor": {
       "commentStart": "// ",
       "commentDelimiters": {
         "line": "//",
