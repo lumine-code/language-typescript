@@ -338,8 +338,8 @@
   (#set! capture.final))
 
 ; The "foo" and "bar" in `enum Baz { foo, bar }`
-(enum_body
-  name: (property_identifier) @variable.declaration.enum._LANG_)
+((property_identifier) @variable.declaration.enum._LANG_
+  (#is? test.childOfType enum_body))
 
 ; The "foo" in `enum Bar { foo = 1 }`
 (enum_assignment
@@ -353,14 +353,22 @@
 ["var" "let" "const" "class" "function"] @storage.type._TYPE_._LANG_
 ["extends" "static" "async" "infer"] @storage.modifier._TYPE_._LANG_
 
-(type_arguments "<" @punctuation.definition.parameters.begin.bracket.angle._LANG_
+(("<" @punctuation.definition.parameters.begin.bracket.angle._LANG_)
+  (#is? test.childOfType type_arguments)
+  (#is? test.first true)
   (#set! capture.final))
-(type_arguments ">" @punctuation.definition.parameters.end.bracket.angle._LANG_
+((">" @punctuation.definition.parameters.end.bracket.angle._LANG_)
+  (#is? test.childOfType type_arguments)
+  (#is? test.last true)
   (#set! capture.final))
 
-(type_parameters "<" @punctuation.definition.parameters.begin.bracket.angle._LANG_
+(("<" @punctuation.definition.parameters.begin.bracket.angle._LANG_)
+  (#is? test.childOfType type_parameters)
+  (#is? test.first true)
   (#set! capture.final))
-(type_parameters ">" @punctuation.definition.parameters.end.bracket.angle._LANG_
+((">" @punctuation.definition.parameters.end.bracket.angle._LANG_)
+  (#is? test.childOfType type_parameters)
+  (#is? test.last true)
   (#set! capture.final))
 
 "=>" @storage.type.arrow._LANG_
@@ -622,8 +630,8 @@
   key: (property_identifier) @entity.other.attribute-name._LANG_)
 
 ; TODO: This is both a key and a value, so opinions may vary on how to treat it.
-(object
-  (shorthand_property_identifier) @entity.other.attribute-name.shorthand._LANG_)
+((shorthand_property_identifier) @entity.other.attribute-name.shorthand._LANG_
+  (#is? test.childOfType object))
 
 ; The "FOO" in `FOO.bar` should be scoped as a constant.
 (member_expression
