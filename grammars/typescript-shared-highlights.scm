@@ -66,21 +66,22 @@
   pattern: (rest_pattern
     (identifier) @variable.parameter.rest._LANG_))
 
-(required_parameter
-  pattern: (object_pattern
-    (shorthand_property_identifier_pattern) @variable.parameter.destructuring._LANG_)
-    (#set! capture.final))
+((shorthand_property_identifier_pattern) @variable.parameter.destructuring._LANG_
+  (#is? test.typeAt "parent object_pattern")
+  (#is? test.typeAt "parent.parent required_parameter")
+  (#set! capture.final))
 
-(required_parameter
-  pattern: (object_pattern
-    (rest_pattern (identifier) @variable.parameter.destructuring.rest._LANG_))
-    (#set! capture.final))
+((identifier) @variable.parameter.destructuring.rest._LANG_
+  (#is? test.typeAt "parent rest_pattern")
+  (#is? test.typeAt "parent.parent object_pattern")
+  (#is? test.typeAt "parent.parent.parent required_parameter")
+  (#set! capture.final))
 
-(required_parameter
-  pattern: (object_pattern
-    (object_assignment_pattern
-      (shorthand_property_identifier_pattern) @variable.parameter.destructuring.with-default._LANG_))
-    (#set! capture.final))
+((shorthand_property_identifier_pattern) @variable.parameter.destructuring.with-default._LANG_
+  (#is? test.typeAt "parent object_assignment_pattern")
+  (#is? test.typeAt "parent.parent object_pattern")
+  (#is? test.typeAt "parent.parent.parent required_parameter")
+  (#set! capture.final))
 
 (optional_parameter
   pattern: (identifier) @variable.parameter.optional._LANG_
@@ -137,8 +138,8 @@
 
 ; `object_pattern` appears to only be encountered in assignment expressions, so
 ; this won't match other uses of object/prop shorthand.
-((object_pattern
-  (shorthand_property_identifier_pattern) @variable.other.assignment.destructuring._LANG_))
+((shorthand_property_identifier_pattern) @variable.other.assignment.destructuring._LANG_
+  (#is? test.childOfType object_pattern))
 
 ; A variable object destructuring with default value:
 ; The "foo" in `let { foo = true } = something`
@@ -147,40 +148,38 @@
 
 ; A variable object alias destructuring:
 ; The "bar" and "foo" in `let { bar: foo } = something`
-(object_pattern
-  (pair_pattern
-    ; TODO: This arguably isn't an object key.
-    key: (_) @entity.other.attribute-name._LANG_
-    value: (identifier) @variable.other.assignment.destructuring._LANG_)
-    (#set! capture.final true))
+(pair_pattern
+  ; TODO: This arguably isn't an object key.
+  key: (_) @entity.other.attribute-name._LANG_
+  value: (identifier) @variable.other.assignment.destructuring._LANG_
+  (#is? test.typeAt "parent.parent object_pattern")
+  (#set! capture.final true))
 
 ; A complex object alias destructuring:
 ; The "bar" in `let { bar: { foo: troz } } = something`
-(object_pattern
-  (pair_pattern
-    ; TODO: This arguably isn't an object key.
-    key: (_) @entity.other.attribute-name._LANG_)
-    (#set! capture.final true))
+(pair_pattern
+  ; TODO: This arguably isn't an object key.
+  key: (_) @entity.other.attribute-name._LANG_
+  (#is? test.typeAt "parent.parent object_pattern")
+  (#set! capture.final true))
 
 ; A variable object alias destructuring with default value:
 ; The "bar" and "foo" in `let { bar: foo = true } = something`
-(object_pattern
-  (pair_pattern
-    ; TODO: This arguably isn't an object key.
-    key: (_) @entity.other.attribute-name._LANG_
-    value: (assignment_pattern
-      left: (identifier) @variable.other.assignment.destructuring._LANG_)))
+(pair_pattern
+  value: (assignment_pattern
+    left: (identifier) @variable.other.assignment.destructuring._LANG_)
+  (#is? test.typeAt "parent.parent.parent object_pattern"))
 
 ; An array-destructured assignment or reassignment, regardless of depth:
 ; The "foo" in `[foo] = bar;` and `[[foo]] = bar;`.
-(array_pattern
-  (identifier) @variable.other.assignment.destructuring._LANG_)
+((identifier) @variable.other.assignment.destructuring._LANG_
+  (#is? test.childOfType array_pattern))
 
 ; An array-destructured assignment or reassignment with a default, regardless of depth:
 ; The "baz" in `let [foo, bar, baz = false] = something;` and `let [[baz = 5]] = something`;
-(array_pattern
-  (assignment_pattern
-    (identifier) @variable.other.assignment.destructuring._LANG_))
+(assignment_pattern
+  (identifier) @variable.other.assignment.destructuring._LANG_
+  (#is? test.typeAt "parent.parent array_pattern"))
 
 ; A variable declaration in a for…(in|of) loop:
 ; The "foo" in `for (let foo of bar) {`
@@ -189,24 +188,24 @@
 
 ; A variable array destructuring in a for…(in|of) loop:
 ; The "foo" and "bar" in `for (let [foo, bar] of baz)`
-(for_in_statement
-  left: (array_pattern
-    (identifier) @variable.other.assignment.loop._LANG_))
+((identifier) @variable.other.assignment.loop._LANG_
+  (#is? test.typeAt "parent array_pattern")
+  (#is? test.typeAt "parent.parent for_in_statement"))
 
 ; A variable object destructuring in a for…(in|of) loop:
 ; The "foo" and "bar" in `for (let { foo, bar } of baz)`
-(for_in_statement
-  left: (object_pattern
-    (shorthand_property_identifier_pattern) @variable.other.assignment.loop._LANG_))
+((shorthand_property_identifier_pattern) @variable.other.assignment.loop._LANG_
+  (#is? test.typeAt "parent object_pattern")
+  (#is? test.typeAt "parent.parent for_in_statement"))
 
 ; A variable object destructuring in a for…(in|of) loop:
 ; The "foo" in `for (let { bar: foo } of baz)`
-(for_in_statement
-  left: (object_pattern
-    (pair_pattern
-      key: (_) @entity.other.attribute-name._LANG_
-      value: (identifier) @variable.other.assignment.loop._LANG_)
-      (#set! capture.final true)))
+(pair_pattern
+  key: (_) @entity.other.attribute-name._LANG_
+  value: (identifier) @variable.other.assignment.loop._LANG_
+  (#is? test.typeAt "parent object_pattern")
+  (#is? test.typeAt "parent.parent for_in_statement")
+  (#set! capture.final true))
 
 ; The "error" in `} catch (error) {`
 (catch_clause
@@ -227,7 +226,8 @@
 ; ========
 
 ((comment) @comment.line.double-slash._LANG_
-  (#match? @comment.line.double-slash._LANG_ "^//"))
+  (#match? @comment.line.double-slash._LANG_ "^//")
+  (#set! adjust.endBeforeFirstMatchOf "\\r?$"))
 
 ((comment) @punctuation.definition.comment._LANG_
   (#match? @punctuation.definition.comment._LANG_ "^//")
@@ -762,29 +762,33 @@
 ; STRINGS
 ; =======
 
-((string "\"") @string.quoted.double._LANG_)
-((string
-  "\"" @punctuation.definition.string.begin._LANG_)
+((string) @string.quoted.double._LANG_
+  (#is? test.textAt "firstChild \""))
+("\"" @punctuation.definition.string.begin._LANG_
+  (#is? test.childOfType string)
   (#is? test.first true))
 
-((string
-  "\"" @punctuation.definition.string.end._LANG_)
+("\"" @punctuation.definition.string.end._LANG_
+  (#is? test.childOfType string)
   (#is? test.last true))
 
-((string "'") @string.quoted.single._LANG_)
-((string
-  "'" @punctuation.definition.string.begin._LANG_)
+((string) @string.quoted.single._LANG_
+  (#is? test.textAt "firstChild '"))
+("'" @punctuation.definition.string.begin._LANG_
+  (#is? test.childOfType string)
   (#is? test.first true))
 
-((string
-  "'" @punctuation.definition.string.end._LANG_)
+("'" @punctuation.definition.string.end._LANG_
+  (#is? test.childOfType string)
   (#is? test.last true))
 
 (template_string) @string.quoted.template._LANG_
 
-((template_string "`" @punctuation.definition.string.begin._LANG_)
+("`" @punctuation.definition.string.begin._LANG_
+  (#is? test.childOfType template_string)
   (#is? test.first true))
-((template_string "`" @punctuation.definition.string.end._LANG_)
+("`" @punctuation.definition.string.end._LANG_
+  (#is? test.childOfType template_string)
   (#is? test.last true))
 
 ; Interpolations inside of template strings.
@@ -820,39 +824,25 @@
 ; type World = "world";
 ; type Greeting = `hello ${World}`;
 (template_literal_type) @string.quoted.backtick._LANG_
-(template_literal_type "`" @punctuation.delimiter.string.begin._LANG_
+("`" @punctuation.delimiter.string.begin._LANG_
+  (#is? test.childOfType template_literal_type)
   (#is? test.first))
-(template_literal_type "`" @punctuation.delimiter.string.end._LANG_
+("`" @punctuation.delimiter.string.end._LANG_
+  (#is? test.childOfType template_literal_type)
   (#is? test.last))
-
-; The `template_type` node is used when there's an interpolation within a
-; template literal type.
-(template_literal_type
-  (template_type
-    "${" @punctuation.section.embedded.begin._LANG_
-    "}" @punctuation.section.embedded.end._LANG_
-  )
-)
 
 ; Scope interpolations with `meta.embedded.line` if they start and end on the
 ; same line…
-(template_literal_type
-  (template_type) @meta.embedded.line.interpolation._LANG_
-  (#is? test.startsOnSameRowAs endPosition)
-)
+((template_type) @meta.embedded.line.interpolation._LANG_
+  (#is? test.startsOnSameRowAs endPosition))
 
 ; …or `meta.embedded.block` if they start and end on different lines.
-(template_literal_type
-  (template_type) @meta.embedded.block.interpolation._LANG_
-  (#is-not? test.startsOnSameRowAs endPosition)
-)
+((template_type) @meta.embedded.block.interpolation._LANG_
+  (#is-not? test.startsOnSameRowAs endPosition))
 
 
-(string
-  (escape_sequence) @constant.character.escape._LANG_)
-
-(template_string
-  (escape_sequence) @constant.character.escape._LANG_)
+((escape_sequence) @constant.character.escape._LANG_
+  (#is? test.childOfType "string template_string"))
 
 
 ; CONSTANTS
@@ -908,13 +898,13 @@
 ; =====
 
 (regex) @string.regexp._LANG_
-(regex
-  "/" @punctuation.definition.string.begin._LANG_
+(("/" @punctuation.definition.string.begin._LANG_)
+  (#is? test.childOfType regex)
   (#is? test.first))
 
-(regex
-  "/" @punctuation.definition.string.end._LANG_
-  (#is? test.last))
+(("/" @punctuation.definition.string.end._LANG_)
+  (#is? test.childOfType regex)
+  (#is? test.typeAt "previousNamedSibling regex_pattern"))
 
 (regex_flags) @keyword.other._LANG_
 

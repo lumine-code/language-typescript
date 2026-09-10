@@ -8,23 +8,11 @@
 ; TODO: If we wanted to give these segments individual scopes, we'd do that
 ; here — replacing the `@_IGNORE_`s with scope names.
 
-(jsx_opening_element
-  (member_expression
-    (identifier) @_IGNORE_
-    (property_identifier) @_IGNORE_
-      (#set! capture.final)))
-
-(jsx_closing_element
-  (member_expression
-    (identifier) @_IGNORE_
-    (property_identifier) @_IGNORE_
-      (#set! capture.final)))
-
-(jsx_self_closing_element
-  (member_expression
-    (identifier) @_IGNORE_
-    (property_identifier) @_IGNORE_
-      (#set! capture.final)))
+(member_expression
+  (identifier) @_IGNORE_
+  (property_identifier) @_IGNORE_
+  (#is? test.typeAt "parent.parent jsx_opening_element jsx_closing_element jsx_self_closing_element")
+  (#set! capture.final))
 
 ; JSX
 ; ===
@@ -36,24 +24,24 @@
 ] @meta.tag.ts.tsx
 
 ; The "Foo" in `<Foo />`.
-(jsx_self_closing_element
-  name: (_) @entity.name.tag.ts.tsx)
+([(identifier) (jsx_namespace_name) (member_expression)] @entity.name.tag.ts.tsx
+  (#is? test.typeAt "parent jsx_self_closing_element"))
 
 ; The "Foo" in `<Foo>`.
-(jsx_opening_element
-  name: (identifier) @entity.name.tag.ts.tsx)
+((identifier) @entity.name.tag.ts.tsx
+  (#is? test.typeAt "parent jsx_opening_element"))
 
 ; The "Foo.Bar" in `<Foo.Bar>`.
-(jsx_opening_element
-  name: (member_expression) @entity.name.tag.ts.tsx)
+((member_expression) @entity.name.tag.ts.tsx
+  (#is? test.typeAt "parent jsx_opening_element"))
 
 ; The "Foo" in `</Foo>`.
-(jsx_closing_element
-  name: (identifier) @entity.name.tag.ts.tsx)
+((identifier) @entity.name.tag.ts.tsx
+  (#is? test.typeAt "parent jsx_closing_element"))
 
 ; The "Foo.Bar" in `</Foo.Bar>`.
-(jsx_closing_element
-  name: (member_expression) @entity.name.tag.ts.tsx)
+((member_expression) @entity.name.tag.ts.tsx
+  (#is? test.typeAt "parent jsx_closing_element"))
 
 ; The "bar" in `<Foo bar={true} />`.
 (jsx_attribute
@@ -79,17 +67,27 @@
 
 (jsx_expression) @meta.embedded.line.ts.tsx
 
-(jsx_opening_element
-  "<" @punctuation.definition.tag.begin.ts.tsx
-  ">" @punctuation.definition.tag.end.ts.tsx)
+("<" @punctuation.definition.tag.begin.ts.tsx
+  (#is? test.childOfType jsx_opening_element)
+  (#is? test.first true))
+(">" @punctuation.definition.tag.end.ts.tsx
+  (#is? test.childOfType jsx_opening_element)
+  (#is? test.last true))
 ;
-(jsx_closing_element
-  "</" @punctuation.definition.tag.begin.ts.tsx
-  ">" @punctuation.definition.tag.end.ts.tsx)
+("</" @punctuation.definition.tag.begin.ts.tsx
+  (#is? test.childOfType jsx_closing_element)
+  (#is? test.first true))
+(">" @punctuation.definition.tag.end.ts.tsx
+  (#is? test.childOfType jsx_closing_element)
+  (#is? test.last true))
 
-(jsx_self_closing_element
-  "<" @punctuation.definition.tag.begin.ts.tsx
-  "/>" @punctuation.definition.tag.end.ts.tsx
+("<" @punctuation.definition.tag.begin.ts.tsx
+  (#is? test.childOfType jsx_self_closing_element)
+  (#is? test.first true)
+  (#set! capture.final))
+("/>" @punctuation.definition.tag.end.ts.tsx
+  (#is? test.childOfType jsx_self_closing_element)
+  (#is? test.last true)
   (#set! capture.final))
 
 

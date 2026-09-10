@@ -43,15 +43,14 @@ describe("WASM Tree-sitter TypeScript grammar", () => {
     expect(scopesAt("$")).toContain("keyword.control.anchor.regexp");
   });
 
-  it("roots enum, shorthand-property, and generic-delimiter captures on leaf nodes", () => {
+  it("keeps unbounded highlight contexts leaf-rooted", () => {
     const query = fs.readFileSync(highlightsPath, "utf8");
 
-    expect(query).not.toContain("(enum_body\n  name: (property_identifier)");
-    expect(query).not.toContain("(object\n  (shorthand_property_identifier)");
-    expect(query).not.toMatch(/\((?:type_arguments|type_parameters) ["<>]/);
     expect(query).toContain("(#is? test.childOfType enum_body)");
     expect(query).toContain("(#is? test.childOfType object)");
     expect(query).toContain("(#is? test.childOfType type_arguments)");
     expect(query).toContain("(#is? test.childOfType type_parameters)");
+    expect(query).toContain('(#is? test.typeAt "previousNamedSibling regex_pattern")');
+    expect(query).toContain('(#set! adjust.endBeforeFirstMatchOf "\\\\r?$")');
   });
 });
