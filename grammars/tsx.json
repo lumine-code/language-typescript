@@ -4,7 +4,7 @@
   "type": "tree-sitter",
   "parser": "tree-sitter-typescript/tsx",
   "fileTypes": ["tsx", "ctsx", "mtsx"],
-  "injectionNames": ["tsx"],
+  "injectionNames": ["tsx", "typescriptreact"],
   "comments": {
     "start": "// "
   },
