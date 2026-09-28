@@ -19,12 +19,12 @@ describe("TSX Tree-sitter highlights", () => {
     await editor.getBuffer().languageMode.ready;
   }
 
-  function rawCaptures(startRow, endRow) {
-    const layer = editor.getBuffer().languageMode.rootLanguageLayer;
-    return layer.queries.highlightsQuery.captures(layer.tree.rootNode, {
+  async function rawCaptures(startRow, endRow) {
+    const groups = await editor.getGrammarQueryCaptureGroups("highlightsQuery", {
       startPosition: new Point(startRow, 0),
       endPosition: new Point(endRow, 0),
     });
+    return groups.find(({ grammar }) => grammar === editor.getGrammar())?.captures ?? [];
   }
 
   function expectLocalAttributeTile(captures) {
@@ -54,7 +54,7 @@ describe("TSX Tree-sitter highlights", () => {
     }
     opening.push(">content</Namespace.Widget>);");
     await setUp(opening.join("\r\n"));
-    expectLocalAttributeTile(rawCaptures(3000, 3006));
+    expectLocalAttributeTile(await rawCaptures(3000, 3006));
 
     const selfClosing = ["const node = (<Namespace.Widget"];
     for (let index = 0; index < 6000; index++) {
@@ -63,7 +63,7 @@ describe("TSX Tree-sitter highlights", () => {
     selfClosing.push("/>);");
     editor.setText(selfClosing.join("\r\n"));
     await editor.getBuffer().languageMode.atTransactionEnd();
-    expectLocalAttributeTile(rawCaptures(3000, 3006));
+    expectLocalAttributeTile(await rawCaptures(3000, 3006));
 
     const query = fs.readFileSync(HIGHLIGHTS_PATH, "utf8");
     expect(query).toContain("(#is? test.childOfType jsx_opening_element)");

@@ -37,8 +37,7 @@ describe("TypeScript Tree-sitter highlights", () => {
     return editor.scopeDescriptorForBufferPosition(point).getScopesArray();
   }
 
-  function rawCaptures(startRow, endRow) {
-    const layer = languageMode.rootLanguageLayer;
+  async function rawCaptures(startRow, endRow) {
     const options =
       startRow == null
         ? undefined
@@ -46,7 +45,8 @@ describe("TypeScript Tree-sitter highlights", () => {
             startPosition: new Point(startRow, 0),
             endPosition: new Point(endRow, 0),
           };
-    return layer.queries.highlightsQuery.captures(layer.tree.rootNode, options);
+    const groups = await editor.getGrammarQueryCaptureGroups("highlightsQuery", options);
+    return groups.find(({ grammar }) => grammar === editor.getGrammar())?.captures ?? [];
   }
 
   function expectDelimiterScopes(needle, beginScope, endScope, occurrence = 0) {
@@ -160,7 +160,7 @@ describe("TypeScript Tree-sitter highlights", () => {
       ].join("\n"),
     );
 
-    const typeCaptures = rawCaptures(2, 5).filter(
+    const typeCaptures = (await rawCaptures(2, 5)).filter(
       (capture) => capture.name.startsWith("punctuation.") && capture.name.includes(".parameters."),
     );
     expect(
@@ -176,7 +176,7 @@ describe("TypeScript Tree-sitter highlights", () => {
       ),
     ).toBe(true);
 
-    const templateCaptures = rawCaptures(6, 8).filter((capture) =>
+    const templateCaptures = (await rawCaptures(6, 8)).filter((capture) =>
       capture.name.startsWith("punctuation.definition.string."),
     );
     expect(
@@ -218,7 +218,7 @@ describe("TypeScript Tree-sitter highlights", () => {
     editor.setText(objectLines.join("\r\n"));
     await languageMode.atTransactionEnd();
 
-    let captures = rawCaptures(3000, 3006);
+    let captures = await rawCaptures(3000, 3006);
     expect(captures.length).toBeLessThanOrEqual(32);
     expect(
       captures.every(
@@ -235,7 +235,7 @@ describe("TypeScript Tree-sitter highlights", () => {
     editor.setText(arrayLines.join("\r\n"));
     await languageMode.atTransactionEnd();
 
-    captures = rawCaptures(3000, 3006);
+    captures = await rawCaptures(3000, 3006);
     expect(captures.length).toBeLessThanOrEqual(24);
     expect(
       captures.every(
@@ -261,7 +261,7 @@ describe("TypeScript Tree-sitter highlights", () => {
     lines.push(">;");
     await setUp(lines.join("\r\n"));
 
-    const captures = rawCaptures(3000, 3006);
+    const captures = await rawCaptures(3000, 3006);
     expect(captures.length).toBeLessThanOrEqual(16);
     expect(
       captures.every(
@@ -274,14 +274,14 @@ describe("TypeScript Tree-sitter highlights", () => {
   it("keeps template escapes local inside a 6000-line template string", async () => {
     const lines = ["const value = `", ...Array.from({ length: 6000 }, () => "  \\n"), "`;"];
     await setUp(lines.join("\r\n"));
-    expect(languageMode.tree.rootNode.hasError).toBe(false);
+    expect((await editor.getSyntaxDiagnostics()).hasError).toBe(false);
     expect(editor.scopeDescriptorForBufferPosition([1, 2]).getScopesArray()).toContain(
       "constant.character.escape.ts",
     );
 
     const startRow = 2998;
     const endRow = startRow + 6;
-    const captures = rawCaptures(startRow, endRow);
+    const captures = await rawCaptures(startRow, endRow);
     expect(captures.length).toBeLessThanOrEqual(24);
     expect(
       captures
@@ -299,17 +299,17 @@ describe("TypeScript Tree-sitter highlights", () => {
     const escapeCount = 20000;
     const prefix = 'const value = "';
     await setUp(`${prefix}${"\\n".repeat(escapeCount)}";`);
-    expect(languageMode.tree.rootNode.hasError).toBe(false);
+    expect((await editor.getSyntaxDiagnostics()).hasError).toBe(false);
 
     const startColumn = prefix.length + escapeCount;
     expect(editor.scopeDescriptorForBufferPosition([0, startColumn]).getScopesArray()).toContain(
       "constant.character.escape.ts",
     );
-    const layer = languageMode.rootLanguageLayer;
-    const captures = layer.queries.highlightsQuery.captures(layer.tree.rootNode, {
+    const groups = await editor.getGrammarQueryCaptureGroups("highlightsQuery", {
       startPosition: new Point(0, startColumn),
       endPosition: new Point(0, startColumn + 12),
     });
+    const captures = groups.find(({ grammar }) => grammar === editor.getGrammar()).captures;
     const escapes = captures.filter(({ name }) => name === "constant.character.escape.ts");
     expect(escapes.length).toBe(6);
     expect(
@@ -333,11 +333,11 @@ describe("TypeScript Tree-sitter highlights", () => {
       "`;",
     ];
     await setUp(lines.join("\r\n"));
-    expect(languageMode.tree.rootNode.hasError).toBe(false);
+    expect((await editor.getSyntaxDiagnostics()).hasError).toBe(false);
 
     const startRow = 2998;
     const endRow = startRow + 6;
-    const captures = rawCaptures(startRow, endRow);
+    const captures = await rawCaptures(startRow, endRow);
     expect(captures.length).toBeLessThanOrEqual(72);
     expect(
       captures
