@@ -20,11 +20,12 @@ describe("TSX Tree-sitter highlights", () => {
   }
 
   async function rawCaptures(startRow, endRow) {
-    const groups = await editor.getGrammarQueryCaptureGroups("highlightsQuery", {
+    const query = await editor.getGrammar().getQuery("highlightsQuery");
+    const root = editor.getSyntaxNodeAtBufferPosition([0, 0], (node) => !node.parent);
+    return query.captures(root, {
       startPosition: new Point(startRow, 0),
       endPosition: new Point(endRow, 0),
     });
-    return groups.find(({ grammar }) => grammar === editor.getGrammar())?.captures ?? [];
   }
 
   function expectLocalAttributeTile(captures) {

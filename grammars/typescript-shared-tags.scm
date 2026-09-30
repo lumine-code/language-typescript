@@ -30,13 +30,8 @@
   name: (identifier) @name
   (#set! symbol.tag "function")) @definition.function
 
-(
-  (comment)* @doc
-  .
-  (lexical_declaration
-    (variable_declarator
-      name: (identifier) @name
-      value: [(arrow_function) (function_expression)]) @definition.function)
-  (#strip! @doc "^[\\s\\*/]+|^[\\s\\*/]$")
-  (#select-adjacent! @doc @definition.function)
-)
+; Documentation comments are not used by symbol navigation.
+(lexical_declaration
+  (variable_declarator
+    name: (identifier) @name
+    value: [(arrow_function) (function_expression)]) @definition.function)
