@@ -4,9 +4,9 @@ describe("TypeScript combined regex injections", () => {
     await lumine.packages.activatePackage("language-typescript");
   });
 
-  async function editorFor(text) {
+  async function editorFor(text, scope = "source.ts") {
     const editor = await lumine.workspace.open();
-    editor.setGrammar(lumine.grammars.grammarForScopeName("source.ts"));
+    editor.setGrammar(lumine.grammars.grammarForScopeName(scope));
     editor.setText(text);
     await editor.languageMode.ready;
     await editor.languageMode.atTransactionEnd();
@@ -25,6 +25,33 @@ describe("TypeScript combined regex injections", () => {
       .scopeDescriptorForBufferPosition(editor.getBuffer().positionForCharacterIndex(index))
       .getScopesArray();
   }
+
+  it("limits shared regex layers in TypeScript and TSX without losing boundary scopes", async () => {
+    const source = Array.from(
+      { length: 300 },
+      (_, index) => `const pattern_${index} = /^value_${index}+$/;`,
+    ).join("\n");
+    for (const scope of ["source.ts", "source.tsx"]) {
+      const editor = await editorFor(source, scope);
+      try {
+        expect(regexLayers(editor).length).toBe(3);
+        expect(
+          regexLayers(editor)
+            .map((layer) => layer.getCurrentRanges().length)
+            .sort((a, b) => b - a),
+        ).toEqual([128, 128, 44]);
+        for (const index of [127, 128, 255, 256, 299]) {
+          const offset = source.indexOf(`value_${index}+`) + `value_${index}`.length;
+          const position = editor.getBuffer().positionForCharacterIndex(offset);
+          expect(editor.scopeDescriptorForBufferPosition(position).getScopesArray()).toContain(
+            "keyword.operator.quantifier.regexp",
+          );
+        }
+      } finally {
+        editor.destroy();
+      }
+    }
+  });
 
   it("combines valid patterns while isolating partial syntax", async () => {
     const editor = await editorFor(
