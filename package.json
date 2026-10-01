@@ -87,18 +87,6 @@
       }
     }
   },
-  "consumedServices": {
-    "hyperlink.injection": {
-      "versions": {
-        "^1.0.0": "consumeHyperlinkInjection"
-      }
-    },
-    "todo.injection": {
-      "versions": {
-        "^1.0.0": "consumeTodoInjection"
-      }
-    }
-  },
   "bugs": {
     "url": "https://github.com/lumine-code/language-typescript/issues"
   },
