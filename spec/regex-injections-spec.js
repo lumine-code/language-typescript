@@ -1,3 +1,11 @@
+const fs = require("fs");
+const path = require("path");
+
+const packagePath = (name) => {
+  const sibling = path.resolve(__dirname, "..", "..", name);
+  return fs.existsSync(sibling) ? sibling : name;
+};
+
 describe("TypeScript combined regex injections", () => {
   beforeEach(async () => {
     await lumine.packages.activatePackage("language-regex");
@@ -25,6 +33,33 @@ describe("TypeScript combined regex injections", () => {
       .scopeDescriptorForBufferPosition(editor.getBuffer().positionForCharacterIndex(index))
       .getScopesArray();
   }
+
+  it("groups template fragments and rechecks their owner in TypeScript and TSX", async () => {
+    for (const name of ["language-html", "language-css"]) {
+      await lumine.packages.activatePackage(packagePath(name));
+    }
+    for (const scope of ["source.ts", "source.tsx"]) {
+      const editor = await editorFor("const view = HTML`<b>${name}</b>`;", scope);
+      try {
+        const layers = () => editor.languageMode.getAllInjectionLayers();
+        expect(layers().length).toBe(1);
+        expect(layers()[0].grammar.scopeName).toBe("text.html.basic");
+        expect(layers()[0].getCurrentRanges().length).toBe(2);
+        expect(scopesAt(editor, "name")).not.toContain("text.html.basic");
+        const buffer = editor.getBuffer();
+        const index = editor.getText().indexOf("HTML");
+        buffer.setTextInRange(
+          [buffer.positionForCharacterIndex(index), buffer.positionForCharacterIndex(index + 4)],
+          "styled.div",
+        );
+        await editor.languageMode.atGrammarSettlement();
+        expect(layers().length).toBe(1);
+        expect(layers()[0].grammar.scopeName).toBe("source.css");
+      } finally {
+        editor.destroy();
+      }
+    }
+  });
 
   it("limits shared regex layers in TypeScript and TSX without losing boundary scopes", async () => {
     const source = Array.from(

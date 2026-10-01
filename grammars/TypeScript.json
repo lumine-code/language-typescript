@@ -16,6 +16,7 @@
     "highlightsQuery": "typescript-shared-highlights.scm",
     "indentsQuery": "typescript-shared-indents.scm",
     "foldsQuery": "typescript-shared-folds.scm",
-    "tagsQuery": "typescript-shared-tags.scm"
+    "tagsQuery": "typescript-shared-tags.scm",
+    "injectionsQuery": "typescript-injections.scm"
   }
 }
