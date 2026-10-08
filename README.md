@@ -2,6 +2,8 @@
 
 TypeScript language support.
 
+Fork of [pulsar-edit/pulsar](https://github.com/pulsar-edit/pulsar) (`packages/language-typescript`).
+
 ## Features
 
 - **Grammars**: provides Tree-sitter grammars built from [tree-sitter-typescript](https://github.com/tree-sitter/tree-sitter-typescript).
