@@ -1,0 +1,16 @@
+{
+  "title": "language-typescript",
+  "description": "TypeScript syntax highlighting in the editor.",
+  "recordedOn": "2026-10-13",
+  "sourceRevision": "fd25308c555dcfc4999a6f5d18bc2cd3bf3b6862",
+  "mode": "normal",
+  "fontSettings": "default",
+  "images": [
+    {
+      "file": "demo.png",
+      "label": "TypeScript syntax highlighting at the default editor font size.",
+      "width": 1100,
+      "height": 670
+    }
+  ]
+}

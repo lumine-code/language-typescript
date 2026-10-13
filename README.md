@@ -11,6 +11,8 @@ Fork of [pulsar-edit/pulsar](https://github.com/pulsar-edit/pulsar) (`packages/l
 - **Snippets**: shortcuts for common TypeScript constructs.
 - **Indentation**: configurable indent rules for braces, brackets, parentheses, switch cases, and hanging operators.
 
+![TypeScript syntax highlighting at the default editor font size.](.github/demo.png)
+
 ## Installation
 
 To install `language-typescript` search for it in the Install pane of the Lumine settings, or run the command `lumine --install lumine-code/language-typescript`.
