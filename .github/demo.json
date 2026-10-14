@@ -1,16 +1,61 @@
 {
   "title": "language-typescript",
-  "description": "TypeScript syntax highlighting in the editor.",
-  "recordedOn": "2026-10-13",
-  "sourceRevision": "fd25308c555dcfc4999a6f5d18bc2cd3bf3b6862",
+  "description": "TypeScript syntax highlighting at the default editor font size.",
+  "recordedOn": "2026-10-14",
+  "sourceRevision": "e3b5360cda7b98fe365cf085fbef24de6f583b25",
+  "themeSourceRevision": "14a69683b0e3238e2bc128fbfae3866c1e4ee9c6",
   "mode": "normal",
   "fontSettings": "default",
+  "scenario": "demo.js",
+  "recipeHash": "ba786a70776314cfb6edff1d0378cd2428c5e4d0b7a5946a1617cd4186ea1bde",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "electron": "44.7.0",
+    "chrome": "152.0.7977.130",
+    "devicePixelRatio": 1,
+    "locale": "en-GB",
+    "fontFamily": "Fira Code, Menlo, DejaVu Sans Mono, Consolas, monospace",
+    "fontSize": 14,
+    "themes": ["one-day-syntax", "one-day-ui"]
+  },
+  "viewport": { "width": 1100, "height": 670 },
+  "cornerRadius": 10,
+  "sources": {
+    "editor": {
+      "revision": "0362a9fac7d6e153a768c0381800d6f3eb06647a",
+      "dirty": true,
+      "workingTreeHash": "c4defaf459f08a90cb1517ff7c04fdeeae7e7de98030f65415ee09a97572e9a7"
+    },
+    "package": {
+      "revision": "e3b5360cda7b98fe365cf085fbef24de6f583b25",
+      "dirty": true,
+      "workingTreeHash": "742513fd113a9d5f9a2a40e401146b31209a97c3d81bf7db97d75a0204b6df69"
+    },
+    "language-typescript": {
+      "revision": "e3b5360cda7b98fe365cf085fbef24de6f583b25",
+      "dirty": true,
+      "workingTreeHash": "742513fd113a9d5f9a2a40e401146b31209a97c3d81bf7db97d75a0204b6df69"
+    },
+    "one-theme": {
+      "revision": "14a69683b0e3238e2bc128fbfae3866c1e4ee9c6",
+      "dirty": true,
+      "workingTreeHash": "50ec2f83a6347dd8113870992ec4eb2be4014f3d9e12213c2f51b543f1eca793"
+    }
+  },
+  "fixtures": [
+    {
+      "file": "signal.ts",
+      "sha256": "944c8e964df5d9c0f53868d8640d891599438d8f068251c5824a71fa6f53d825"
+    }
+  ],
   "images": [
     {
       "file": "demo.png",
       "label": "TypeScript syntax highlighting at the default editor font size.",
       "width": 1100,
-      "height": 670
+      "height": 670,
+      "sha256": "632074cb1550ebca72fb6a47c8962b098b3714fb8c458d9af1dc387fe11b1dba"
     }
   ]
 }
