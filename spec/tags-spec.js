@@ -16,7 +16,7 @@ describe("TypeScript symbol queries", () => {
       const source = `${Array.from({ length: 3000 }, (_, i) => `// documentation ${i}\n`).join("")}const value = () => {};`;
       const query = await grammar.getQuery("tagsQuery");
       const parser = grammar.createParser(await grammar.getLanguage());
-      const tree = parser.parse(source);
+      const tree = await parser.parse(source);
       try {
         expect(tree.rootNode.hasError).toBe(false);
         expect(
@@ -27,8 +27,7 @@ describe("TypeScript symbol queries", () => {
         ).toEqual([]);
         expect(query.didExceedMatchLimit()).toBe(false);
       } finally {
-        tree.delete();
-        parser.delete();
+        parser.close();
       }
       editor = await lumine.workspace.open();
       editor.setGrammar(grammar);
