@@ -1,3 +1,9 @@
+; Existing literal and comment contents are user data, including whitespace.
+([(template_string) (comment) (template_literal_type)] @preserve
+  (#is? indent.reindent true)
+  (#is-not? indent.matchesCurrentRow startPosition)
+  (#set! indent.force true))
+
 ; STATEMENT BLOCKS
 ; ================
 
