@@ -1,3 +1,10 @@
+; Recovery can expose template text as punctuation before the closing backtick.
+([(ERROR "`" ["{" "[" "("] @_IGNORE_)
+  (ERROR (ERROR "`") ["{" "[" "("] @_IGNORE_)] @_error
+  (#is? test.endsOnSameRowAs parent.endPosition)
+  (#match? @_error "`(?:\\\\.|[^`\\\\$]|\\$(?!\\{))*$")
+  (#set! capture.final true))
+
 ; Existing literal and comment contents are user data, including whitespace.
 ([(template_string) (comment) (template_literal_type)] @preserve
   (#is? indent.reindent true)
@@ -192,5 +199,7 @@
 (type_arguments "<" @indent)
 (type_arguments ">" @dedent)
 
-(switch_case "case" @indent)
-(switch_default "default" @indent)
+(switch_case ":" @indent
+  (#is? test.lastTextOnRow true))
+(switch_default ":" @indent
+  (#is? test.lastTextOnRow true))
