@@ -18,5 +18,8 @@
     "foldsQuery": "typescript-shared-folds.scm",
     "tagsQuery": "typescript-shared-tags.scm",
     "injectionsQuery": "typescript-injections.scm"
-  }
+  },
+  "firstLineRegex": [
+    "^#![ \\t]*(?:(?:[^ \\t\\r\\n]*/)?env[ \\t]+(?:-S[ \\t]+)?(?:[^ \\t\\r\\n]*/)?|(?:[^ \\t\\r\\n]*/)?)(?:ts-node(?:-esm)?|tsx)(?=[ \\t\\r\\n]|$)"
+  ]
 }

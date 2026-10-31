@@ -67,6 +67,9 @@
 
 (jsx_expression) @meta.embedded.line.ts.tsx
 
+; Comment settings must distinguish code children from their JSX braces.
+(jsx_expression (_) @meta.embedded.code.ts.tsx)
+
 ("<" @punctuation.definition.tag.begin.ts.tsx
   (#is? test.childOfType jsx_opening_element)
   (#is? test.first true))

@@ -25,7 +25,8 @@
     "node": ">=24"
   },
   "specPackages": [
-    "language-regex"
+    "language-regex",
+    "bracket-matcher"
   ],
   "repository": "https://github.com/lumine-code/language-typescript",
   "license": "MIT",

@@ -5,7 +5,11 @@
       "commentDelimiters": {
         "line": "//",
         "block": ["/*", "*/"]
-      }
+      },
+      "nonWordCharacters": "/\\()\"':,.;<>~!@%^&*|+=[]{}`?-…"
+    },
+    "bracket-matcher": {
+      "autocompleteCharacters": ["()", "[]", "{}", "\"\"", "''", "``"]
     }
   }
 }

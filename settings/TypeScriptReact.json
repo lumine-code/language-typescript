@@ -5,10 +5,14 @@
       "commentDelimiters": {
         "line": "//",
         "block": ["/*", "*/"]
-      }
+      },
+      "nonWordCharacters": "/\\()\"':,.;<>~!@%^&*|+=[]{}`?-…"
+    },
+    "bracket-matcher": {
+      "autocompleteCharacters": ["()", "[]", "{}", "\"\"", "''", "``"]
     }
   },
-  ".meta.tag.tsx, .meta.block.jsx.ts.tsx": {
+  ".meta.tag.ts.tsx, .meta.block.jsx.ts.tsx": {
     "editor": {
       "commentStart": "{/* ",
       "commentEnd": " */}",
@@ -17,7 +21,7 @@
       }
     }
   },
-  ".meta.tag.tsx .meta.block.ts.tsx": {
+  ".meta.embedded.code.ts.tsx": {
     "editor": {
       "commentStart": "// ",
       "commentDelimiters": {
