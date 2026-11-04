@@ -17,7 +17,10 @@
     "indentsQuery": "typescript-shared-indents.scm",
     "foldsQuery": "typescript-shared-folds.scm",
     "tagsQuery": "typescript-shared-tags.scm",
-    "injectionsQuery": "typescript-injections.scm"
+    "injectionsQuery": "typescript-injections.scm",
+    "contentEditPolicies": {
+      "content-words": "../lib/content-edit-policy.js"
+    }
   },
   "firstLineRegex": [
     "^#![ \\t]*(?:(?:[^ \\t\\r\\n]*/)?env[ \\t]+(?:-S[ \\t]+)?(?:[^ \\t\\r\\n]*/)?|(?:[^ \\t\\r\\n]*/)?)(?:ts-node(?:-esm)?|tsx)(?=[ \\t\\r\\n]|$)"
