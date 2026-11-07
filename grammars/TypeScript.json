@@ -10,7 +10,7 @@
   },
   "treeSitter": {
     "parserSource": "github:tree-sitter/tree-sitter-typescript/typescript#v0.23.2",
-    "wasmBuildTool": "tree-sitter-cli#v0.27.1",
+    "wasmBuildTool": "tree-sitter-cli#v0.27.2",
     "languageSegment": "ts",
     "grammar": "typescript.wasm",
     "highlightsQuery": "typescript-shared-highlights.scm",

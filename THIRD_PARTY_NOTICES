@@ -64,6 +64,12 @@ MIT licence.
 Source: https://github.com/tree-sitter/tree-sitter-typescript
 Revision: v0.23.2
 
+Parser source: github:tree-sitter/tree-sitter-typescript/tsx#v0.23.2
+Resolved commit: f975a621f4e7f532fe322e13c4f79495e0a7b2e7
+
+Parser source: github:tree-sitter/tree-sitter-typescript/typescript#v0.23.2
+Resolved commit: f975a621f4e7f532fe322e13c4f79495e0a7b2e7
+
 Original file: LICENSE
 
 The MIT License (MIT)
