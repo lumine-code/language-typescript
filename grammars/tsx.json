@@ -17,6 +17,7 @@
     "indentsQuery": ["typescript-shared-indents.scm", "tsx-indents.scm"],
     "foldsQuery": ["typescript-shared-folds.scm", "tsx-folds.scm"],
     "tagsQuery": "typescript-shared-tags.scm",
+    "tagsQuerySupportsLocalPath": true,
     "injectionsQuery": "tsx-injections.scm",
     "contentEditPolicies": {
       "content-words": "../lib/content-edit-policy.js"

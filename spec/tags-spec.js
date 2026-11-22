@@ -11,6 +11,38 @@ describe("TypeScript symbol queries", () => {
   afterEach(() => editor?.destroy());
 
   for (const scopeName of ["source.ts", "source.tsx"]) {
+    it(`captures both enclosing ${scopeName} symbols from inside a method body`, async () => {
+      const grammar = pack.grammars.find((item) => item.scopeName === scopeName);
+      expect(grammar.queryPaths.tagsQuerySupportsLocalPath).toBe(true);
+      const body = scopeName === "source.tsx" ? "return <div>🧪</div>;" : 'return "🧪";';
+      const source = ["class Outer {", "  inner() {", `    ${body}`, "  }", "}"].join("\r\n");
+      const query = await grammar.getQuery("tagsQuery");
+      const parser = grammar.createParser(await grammar.getLanguage());
+      try {
+        const tree = await parser.parse(source);
+        expect(tree.rootNode.hasError).toBe(false);
+        const matches = query.matches(tree.rootNode, {
+          startPosition: { row: 2, column: 5 },
+          endPosition: { row: 2, column: 7 },
+        });
+        const path = matches
+          .map(({ captures }) => {
+            const definition = captures.find(({ name }) => name.startsWith("definition."));
+            const label = captures.find(({ name }) => name === "name");
+            expect(captures.length).toBe(2);
+            expect(definition.node.range.containsRange(label.node.range)).toBe(true);
+            return [definition.name, label.node.text];
+          })
+          .sort();
+        expect(path).toEqual([
+          ["definition.class", "Outer"],
+          ["definition.method", "inner"],
+        ]);
+      } finally {
+        parser.close();
+      }
+    });
+
     it(`keeps ${scopeName} arrow-function symbols independent of preceding comments`, async () => {
       const grammar = pack.grammars.find((item) => item.scopeName === scopeName);
       const source = `${Array.from({ length: 3000 }, (_, i) => `// documentation ${i}\n`).join("")}const value = () => {};`;
